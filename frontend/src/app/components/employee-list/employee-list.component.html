@@ -1,0 +1,34 @@
+<div class="card m-5">
+    <div class="card-header bg-warning">
+      <strong>Employee Details</strong>
+      <button type="button" class="btn btn-secondary btn-sm" 
+      (click)="onFetchData()" style="float: right;">
+        Fetch Data
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+  
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of employees.employee; let i = index">
+                <td>{{item.employee.name}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.designation}}</td>
+                <td>{{item.phoneNumber}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
