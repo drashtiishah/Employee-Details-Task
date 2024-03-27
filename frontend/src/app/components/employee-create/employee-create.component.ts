@@ -17,10 +17,11 @@ export class EmployeeCreateComponent {
     name: [''],
     email: [''],
     designation: [''],
-    phoneNumber: ['']
+    phoneNumber: [''],
+    redisCacheExpire: ['']
   });
 
-  public onSubmit() {
+  public onSubmit = () => {
     return this._empService.createEmployee(this.employeeForm.value).subscribe({
       complete: () => {
         console.log('Employee successfully added!');
@@ -30,7 +31,8 @@ export class EmployeeCreateComponent {
           name: [''],
           email: [''],
           designation: [''],
-          phoneNumber: ['']
+          phoneNumber: [''],
+          redisCacheExpire: ['']
         }); 
       },
       error: (e) => {

@@ -1,19 +1,15 @@
 const Employee = require('../models/employee');
-const redis = require('redis');
-
-//Connect to Redis
-const client = redis.createClient();
+const client = require('redis').createClient();
 
 client.on('error', err => console.log('Redis Client Error', err));
 client.connect()
-      .then(() => console.log("Connected to Redis !!!!"))
-      .catch((err) => console.log('Redis Client Error', err));
+    .then(() => console.log("Connected to Redis !!!!"))
+    .catch((err) => console.log('Redis Client Error', err));
 
 const isCached = async (req, res, next) => {
     //First check in Redis
     const response = await client.get('employees'); 
       if (response) {
-        console.log("Response>>>", response);
         const employee = JSON.parse(response);
         return res.status(200).json({employee, message: "Data fetched from Redis call"});
       }
@@ -24,7 +20,7 @@ const handleGetAllEmployee = async (req, res) => {
     const employee = await Employee.find();
     console.log("employee>>>", employee);
 
-    return res.status(200).json({ employee, message: "Data fetched from DB call" });
+    res.status(200).json({ employee, message: "Data fetched from DB call" });
 };
 
 const handleCreateNewEmployee = async (req, res) => {
@@ -42,8 +38,10 @@ const handleCreateNewEmployee = async (req, res) => {
     oldEmployee.push(employee);
     console.log("employee>>>", oldEmployee);
 
+    console.log("Redis Cache Expire: ", req.body.redisCacheExpire);
+
     //Store in Redis
-    await client.setEx('employees', 120, JSON.stringify(oldEmployee));
+    await client.setEx('employees', req.body.redisCacheExpire, JSON.stringify(oldEmployee));
 
     return res.status(201).json({ employee, message: "Data successfully added!" });
 
