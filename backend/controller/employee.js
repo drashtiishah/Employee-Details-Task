@@ -13,6 +13,7 @@ const isCached = async (req, res, next) => {
     //First check in Redis
     const response = await client.get('employees'); 
       if (response) {
+        console.log("Response>>>", response);
         const employee = JSON.parse(response);
         return res.status(200).json({employee, message: "Data fetched from Redis call"});
       }
@@ -28,16 +29,21 @@ const handleGetAllEmployee = async (req, res) => {
 
 const handleCreateNewEmployee = async (req, res) => {
 
+    //Fetching emp data
+    const oldEmployee = await Employee.find();
+
     const employee = await Employee.create({
         name: req.body.name,
         email: req.body.email,
         designation: req.body.designation,
         phoneNumber: req.body.phoneNumber
     });
-    console.log("employee>>>", employee);
+
+    oldEmployee.push(employee);
+    console.log("employee>>>", oldEmployee);
 
     //Store in Redis
-    await client.setEx('employees', 3600, JSON.stringify(employee));
+    await client.setEx('employees', 120, JSON.stringify(oldEmployee));
 
     return res.status(201).json({ employee, message: "Data successfully added!" });
 
