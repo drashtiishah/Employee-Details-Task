@@ -13,15 +13,19 @@ export class EmployeeListComponent {
   constructor(private _empService: EmployeeServiceService) {}
 
   public employees:any = [];
+  public message: string= '';
 
   public onFetchData() {
     console.log("Hiiiiiiiiiiiiii");
     return this._empService.getAllEmployees().subscribe(
-      (data) => {
+      (data:any) => {
         console.log("Data---->",JSON.stringify(data));
         debugger;
-        this.employees = data;
+        this.employees = data.employee;
+        this.message = data.message;
         console.log("Employees>>", this.employees);
+        console.log("Message>>>", this.message);
+        
         
       }
     )

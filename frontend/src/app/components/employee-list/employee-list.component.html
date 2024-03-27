@@ -1,11 +1,12 @@
 <div class="card m-5">
-    <div class="card-header bg-warning">
-      <strong>Employee Details</strong>
-      <button type="button" class="btn btn-secondary btn-sm" 
-      (click)="onFetchData()" style="float: right;">
-        Fetch Data
-      </button>
-    </div>
+	<div class="card-header bg-warning d-flex justify-content-between">
+		<strong>Employee Details</strong>
+		<p>{{message}}</p>
+		<button type="button" class="btn btn-secondary btn-sm"
+			(click)="onFetchData()" style="float: right;"> Fetch Data
+      	</button>
+	</div>  
+
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
@@ -20,8 +21,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of employees.employee; let i = index">
-                <td>{{item.employee.name}}</td>
+              <tr *ngFor="let item of employees; let i = index">
+                <td>{{item.name}}</td>
                 <td>{{item.email}}</td>
                 <td>{{item.designation}}</td>
                 <td>{{item.phoneNumber}}</td>
