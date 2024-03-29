@@ -10,7 +10,7 @@ client.connect()
 client.on('ready', () => console.log("Client is ready to use"));
 
 const isRedisClientConnect = async () => {
-    if(client){
+    if (client) {
         console.log("Redis Client already connected!");
         return client;
     }
@@ -19,22 +19,35 @@ const isRedisClientConnect = async () => {
 }
 
 const isCached = async (req, res, next) => {
-    isRedisClientConnect();
+    try {
+        isRedisClientConnect();
 
-    //First check in Redis
-    const response = await client.get('employees');
-    if (response) {
-        const employee = JSON.parse(response);
-        return res.status(200).json({ employee, message: "Data fetched from Redis call" });
+        //First check in Redis
+        const response = await client.get('employees');
+        if (response) {
+            const employee = JSON.parse(response);
+            return res.status(200).json({ employee, message: "Data fetched from Redis call" });
+        }
+        next();
     }
-    next();
+    catch (error) {
+        return res.status(400).json({ error });
+    }
 };
 
 const handleGetAllEmployee = async (req, res) => {
-    const employee = await Employee.find();
-    console.log("employee>>>", employee);
+    try {
+        //Getting employee data from DB
+        const employee = await Employee.find();
 
-    res.status(200).json({ employee, message: "Data fetched from DB call" });
+        //Store in Redis
+        await client.setEx('employees', 20, JSON.stringify(employee));
+
+        return res.status(200).json({ employee, message: "Data fetched from DB call" });
+    }
+    catch (error) {
+        return res.status(400).json({ error });
+    }
 };
 
 const handleCreateNewEmployee = async (req, res) => {
@@ -59,9 +72,9 @@ const handleCreateNewEmployee = async (req, res) => {
         await client.setEx('employees', req.body.redisCacheExpire, JSON.stringify(oldEmployee));
 
         return res.status(201).json({ employee, message: "Data successfully added!" });
-    } 
+    }
     catch (error) {
-        return res.status(404).json({error});
+        return res.status(400).json({ error });
     }
 
 };
