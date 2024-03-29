@@ -11,7 +11,9 @@ import { EmployeeServiceService } from '../../service/employee-service.service';
   styleUrl: './employee-create.component.css'
 })
 export class EmployeeCreateComponent {
-  constructor(private formBuilder: FormBuilder, private _empService: EmployeeServiceService) {}
+  constructor(
+    private formBuilder: FormBuilder, 
+    private _empService: EmployeeServiceService) {}
 
   public employeeForm = this.formBuilder.group({
     name: [''],
@@ -39,6 +41,6 @@ export class EmployeeCreateComponent {
         console.log(e);
       },
     });
-  }
+  };
 
 }

@@ -22,7 +22,7 @@ export class EmployeeListComponent {
         this.employees = data.employee;
         this.message = data.message;  
       }
-    )
-  }
+    );
+  };
 
 }
